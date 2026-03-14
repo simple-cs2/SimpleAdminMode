@@ -1,0 +1,83 @@
+name: Build and Release SAM
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build project
+        run: dotnet build SimpleAdminMode.csproj --configuration Release
+
+      - name: Check MenuManagerApi.dll
+        shell: powershell
+        run: |
+          if (-Not (Test-Path "libs/MenuManagerApi.dll")) {
+              Write-Error "libs/MenuManagerApi.dll not found!"
+              exit 1
+          }
+
+      - name: Download MenuManagerCore
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/Stimayk/MenuManagerCS2/releases/latest/download/MenuManagerCore.zip" -OutFile "MenuManagerCore.zip"
+          if (-Not (Test-Path "MenuManagerCore.zip")) {
+              Write-Error "Failed to download MenuManagerCore.zip"
+              exit 1
+          }
+          Expand-Archive -Path "MenuManagerCore.zip" -DestinationPath "MenuManagerCore" -Force
+
+      - name: Prepare release folder
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path release\SimpleAdminMode
+          New-Item -ItemType Directory -Force -Path release\MenuManagerCore
+          New-Item -ItemType Directory -Force -Path release\MenuManagerApi
+
+          Copy-Item -Path "bin\Release\net8.0\*" -Destination "release\SimpleAdminMode\" -Recurse -Force
+
+          Get-ChildItem -Path MenuManagerCore -Recurse | ForEach-Object {
+              $dest = Join-Path -Path "release\MenuManagerCore" -ChildPath $_.FullName.Substring((Get-Item "MenuManagerCore").FullName.Length + 1)
+              if ($_.PSIsContainer) {
+                  New-Item -ItemType Directory -Force -Path $dest | Out-Null
+              } else {
+                  Copy-Item -Path $_.FullName -Destination $dest -Force
+              }
+          }
+
+          Copy-Item -Path "libs\MenuManagerApi.dll" -Destination "release\MenuManagerApi\MenuManagerApi.dll" -Force
+
+      - name: Package plugin
+        shell: powershell
+        run: |
+          Compress-Archive -Path release\* -DestinationPath SAM-${{ github.ref_name }}.zip -Force
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ZIP to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: SAM-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
