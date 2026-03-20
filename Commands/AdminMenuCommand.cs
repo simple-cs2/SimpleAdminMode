@@ -20,9 +20,6 @@ public partial class SimpleAdminMode
             return;
         }
 
-        // _adminMenu.OpenMainMenu(player);
-        // TODO: Admin menu is currently under development.
-        // _adminMenu.OpenMainMenu(player);
-        player.PrintToChat($" {ChatColors.Red}[SAM] {ChatColors.Grey}Admin menu is currently under development.");
+        _adminMenu.OpenMainMenu(player);
     }
 }

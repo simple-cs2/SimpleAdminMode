@@ -60,6 +60,6 @@ public partial class SimpleAdminMode
 		target.PlayerName = newName;
 		Utilities.SetStateChanged(target, "CBasePlayerController", "m_iszPlayerName");
 		
-		SAMUtils.PrintActionToChat(player, oldName, null, "renamed", $" {ChatColors.Default} to {ChatColors.Blue}{newName}");
+		SAMUtils.PrintActionToChat(player, oldName, [target], "renamed", $" {ChatColors.Default} to {ChatColors.Blue}{newName}");
 	}
 }
