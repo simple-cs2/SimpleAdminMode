@@ -8,13 +8,6 @@ using MenuManager;
 
 namespace SimpleAdminMode;
 
-// TODO: Admin menu is currently in development.
-// Planned features:
-//   - Player selection with immunity support
-//   - Action submenu (slay, kick, ban, mute, gag, silence)
-//   - Duration picker for bans/mutes
-//   - Reason picker per action type
-//   - Back navigation between submenus
 public class AdminMenu
 {
 	private readonly SimpleAdminMode _plugin;
@@ -172,7 +165,6 @@ public class AdminMenu
     	admin.PrintToChat($" {ChatColors.Red}[SAM] {ChatColors.Default}Type new name for {ChatColors.Lime}{target.PlayerName}{ChatColors.Default} in chat. {ChatColors.Grey}(type {ChatColors.White}!cancel {ChatColors.Grey}to cancel)");
 	}
 
-	// TODO: Execute the action after player/duration/reason are selected
 	private void HandleAction(CCSPlayerController admin, CCSPlayerController target, string action, int minutes = 0, string reason = "none")
 	{
 		if(!target.IsValid)
@@ -189,7 +181,7 @@ public class AdminMenu
                 break;
 				
 			case "kick":
-				// Server.ExecuteCommand($"kickid {target.UserId} {reason}");
+				Server.ExecuteCommand($"kickid {target.UserId} {reason}");
 				SAMUtils.PrintActionToChat(admin, target.PlayerName, [target], "kicked", $" {ChatColors.Grey}({reason})");
                 break;
 				
@@ -207,7 +199,7 @@ public class AdminMenu
 						: DateTime.Now.AddMinutes(minutes)	
 				};
 				_ = _plugin._database.Bans.AddAsync(ban);
-				// Server.ExecuteCommand($"kickid {target.UserId} {reason}");
+				Server.ExecuteCommand($"kickid {target.UserId} {reason}");
 				SAMUtils.PrintActionToChat(admin, target.PlayerName, [target], "banned",
                     $" {ChatColors.Default}for {ChatColors.Red}{SAMUtils.FormatDuration(minutes)} {ChatColors.Grey}({reason})");
                 break;
