@@ -17,8 +17,6 @@ public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 
 	internal Database _database = null!;
 	private TelegramService _telegram = null!;
-
-	// TODO: Admin menu — will be enabled once MenuManager integration is complete
 	private AdminMenu _adminMenu = null!;
 
 	// In-memory caches for active gags and mutes.
@@ -37,7 +35,7 @@ public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 		_ = LoadGagCacheAsync();
 		_ = LoadMuteCacheAsync();
 
-		// TODO: Enable admin menu once MenuManager integration is complete
+		// AdminMenu
 		_adminMenu = new AdminMenu(this);
 
 		// Events
@@ -50,25 +48,26 @@ public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 		RegisterListener<Listeners.OnClientVoice>(OnPlayerVoice);
 
 		// Commands
-		AddCommand("css_admin",     "Open admin menu",             OnAdminMenuCommand);
-		AddCommand("css_slay",      "Kill a player",               OnSlayCommand);
-		AddCommand("css_kick",      "Kick a player",               OnKickCommand);
-		AddCommand("css_ban",       "Ban a player",                OnBanCommand);
-		AddCommand("css_unban",     "Unban a player",              OnUnBanCommand);
-		AddCommand("css_gag",       "Block text chat",             OnGagCommand);
-		AddCommand("css_ungag",     "Unblock text chat",           OnUnGagCommand);
-		AddCommand("css_mute",      "Block voice chat",            OnMuteCommand);
-		AddCommand("css_unmute",    "Unblock voice chat",          OnUnMuteCommand);
-		AddCommand("css_silence",   "Block all communication",     OnSilenceCommand);
-		AddCommand("css_unsilence", "Unblock all communication",   OnUnSilenceCommand);
-		AddCommand("css_rename",    "Rename a player",             OnRenameCommand);
-		AddCommand("css_report",    "Report a player to Telegram", OnReportCommand);
+		AddCommand("css_admin",		"Open admin menu",				OnAdminMenuCommand);
+		AddCommand("css_slay",		"Kill a player",				OnSlayCommand);
+		AddCommand("css_kick",		"Kick a player",				OnKickCommand);
+		AddCommand("css_ban",		"Ban a player",					OnBanCommand);
+		AddCommand("css_unban",		"Unban a player",				OnUnBanCommand);
+		AddCommand("css_gag",		"Block text chat",				OnGagCommand);
+		AddCommand("css_ungag",		"Unblock text chat",			OnUnGagCommand);
+		AddCommand("css_mute",		"Block voice chat",				OnMuteCommand);
+		AddCommand("css_unmute",	"Unblock voice chat",			OnUnMuteCommand);
+		AddCommand("css_silence",	"Block all communication",		OnSilenceCommand);
+		AddCommand("css_unsilence",	"Unblock all communication",	OnUnSilenceCommand);
+		AddCommand("css_rename",	"Rename a player",				OnRenameCommand);
+		AddCommand("css_report",	"Report a player to Telegram",	OnReportCommand);
+		AddCommand("css_freeze",	"Freeze a player",				OnFreezeCommand);
+		AddCommand("css_unfreeze",	"Unfreeze a player",			OnUnFreezeCommand);
 	}
 
-	// TODO: Uncomment when AdminMenu is ready
 	public override void OnAllPluginsLoaded(bool hotReload)
 	{
-	    _adminMenu.Initialize();
+		_adminMenu.Initialize();
 	}
 
 	public void OnConfigParsed(PluginConfig config)
