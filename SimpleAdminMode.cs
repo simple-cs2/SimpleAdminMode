@@ -9,7 +9,7 @@ namespace SimpleAdminMode;
 public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 {
 	public override string ModuleName => "SimpleAdminMode";
-	public override string ModuleVersion => "0.1.0";
+	public override string ModuleVersion => "0.2.0";
 	public override string ModuleAuthor => "t.me/kotyarakryt";
 	public override string ModuleDescription => "A lightweight and powerful admin system for CS2 servers built on CounterStrikeSharp.";
 
