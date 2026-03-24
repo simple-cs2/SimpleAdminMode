@@ -24,6 +24,9 @@ public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 	internal Dictionary<ulong, GagEntry> _gagsCache = new();
 	internal Dictionary<ulong, MuteEntry> _mutesCache = new();
 
+	// Cache timer to prevent duplicate warn message
+	internal Dictionary<ulong, CounterStrikeSharp.API.Modules.Timers.Timer> _warnTimers = new();
+
 	public override void Load(bool hotReload)
 	{
 		// Database
@@ -63,6 +66,9 @@ public partial class SimpleAdminMode : BasePlugin, IPluginConfig<PluginConfig>
 		AddCommand("css_report",	"Report a player to Telegram",	OnReportCommand);
 		AddCommand("css_freeze",	"Freeze a player",				OnFreezeCommand);
 		AddCommand("css_unfreeze",	"Unfreeze a player",			OnUnFreezeCommand);
+		AddCommand("css_warn",		"Warn a player",				OnWarnCommand);
+		AddCommand("css_unwarn",	"Remove last warn",				OnUnWarnCommand);
+		AddCommand("css_warnlist",	"Show warns for a player",		OnWarnListCommand);
 	}
 
 	public override void OnAllPluginsLoaded(bool hotReload)
