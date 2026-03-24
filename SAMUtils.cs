@@ -115,20 +115,22 @@ public static class SAMUtils
 		string actionPast,
 		string optionalText = "")
 	{
-		if(admin == null) return;
-
 		bool hasTargets = targets != null && targets.Count > 0;
 
 		string who = hasTargets
-			? (targetArg == "^" || (targets!.Count == 1 && targets[0].SteamID == admin.SteamID)
+			? (targetArg == "^" || (targets!.Count == 1 && targets[0].SteamID == admin?.SteamID)
 				? "Themselves"
 				: targetArg == "*" || targets!.Count > 1
 					? "Everyone"
 					: targets!.FirstOrDefault()?.PlayerName ?? targetArg)
 			: targetArg;
 
+		string adminName = admin != null
+			? $"{ChatColors.Magenta}{admin.PlayerName}"
+			: $"{ChatColors.Grey}CONSOLE";
+
 		Server.PrintToChatAll(
-			$" {ChatColors.Red}[SAM] {ChatColors.Magenta}{admin.PlayerName} {ChatColors.Default}{actionPast} {ChatColors.Lime}{who}{optionalText}"
+			$" {ChatColors.Red}[SAM] {adminName} {ChatColors.Default}{actionPast} {ChatColors.Lime}{who}{optionalText}"
 		);
 	}
 }
